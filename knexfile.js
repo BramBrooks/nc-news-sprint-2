@@ -28,3 +28,5 @@ const customConfig = {
 };
 
 module.exports = { ...customConfig[ENV], ...baseConfig };
+
+/// ...baseConfig    client:"pg" migrations:{direc}

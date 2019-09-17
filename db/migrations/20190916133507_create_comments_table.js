@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  console.log("Creating comments table....");
+  // console.log("Creating comments table....");
   return knex.schema.createTable("comments", commentsTable => {
     commentsTable.increments("comment_id").primary(); // what format is the comment_id? Is it a number?
     commentsTable.string("author").references("users.username");
@@ -11,6 +11,6 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  console.log("Removing comments tables...");
+  // console.log("Removing comments tables...");
   return knex.schema.dropTable("comments");
 };
