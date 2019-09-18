@@ -64,16 +64,14 @@ describe("/api", () => {
     });
   });
 
-  //************************************************** ARTICLES *****************************************************
-
   describe("/articles", () => {
     describe("GET", () => {
-      it.only("status 200: responds with correct article object when passed valid article id", () => {
+      it("status 200: responds with correct article object when passed valid article id", () => {
         return request
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            console.log(body, "<-- body in test");
+            // console.log(body, "<-- body in test");
             expect(body.article).to.include.keys(
               "author",
               "title",
@@ -90,8 +88,62 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "<-- body in test");
+            // console.log(body, "<----- body in test");
             expect(body.article).to.include.keys("created_at");
+            expect(body.article.comment_count).to.be.a("number");
+            // why is created_at in a string format when it gets back to the test response?
+          });
+      });
+      it("status 404: responds with article not found when passed an articleId which does not exist", () => {
+        return request
+          .get("/api/articles/9999999")
+          .expect(404)
+          .then(({ body }) => {
+            // console.log(body.msg, "<----- body in test");
+            expect(body.msg).to.equal("Article not found");
+          });
+      });
+      it("status 400: responds with bad request when passed an invlaid articleId i.e. not a number", () => {
+        return request
+          .get("/api/articles/abcde")
+          .expect(400)
+          .then(({ body }) => {
+            // console.log(body.msg, "<----- body in test");
+            expect(body.msg).to.equal("Bad Request");
+          });
+      });
+    });
+    describe("PATCH", () => {
+      it("status 200: responds with a correctly updated article object when passed a valid articleId", () => {
+        return request
+          .patch("/api/articles/1")
+          .send({ inc_votes: 4000 })
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body);
+            expect(body.updatedArticle.votes).to.equal(4100);
+          });
+      });
+    });
+    it("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
+      return request
+        .patch("/api/articles/1")
+        .send({ inc_votes: "dog" })
+        .expect(400)
+        .then(({ body }) => {
+          // console.log(body);
+          expect(body.msg).to.equal("Bad Request");
+        });
+    });
+    describe("POST", () => {
+      it.only("status 200: responds with confirmation of the posted comment", () => {
+        return request
+          .post("/api/articles/1/comments")
+          .send({ username: "bram12345", body: "This is a comment!" })
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body);
+            expect(body).to.equal("This is a comment!");
           });
       });
     });

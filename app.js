@@ -1,8 +1,8 @@
 const express = require("express");
 
 const {
-  handleCustomErrors
-  // ,handlePsqlErrors,
+  handleCustomErrors,
+  handlePsqlErrors
   // handleServerErrors
 } = require("./errors/index");
 
@@ -15,6 +15,9 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 app.use(handleCustomErrors);
+
+app.use(handlePsqlErrors);
+
 // app.use(handlePsqlErrors);
 // app.use(handleServerErrors);
 
