@@ -11,7 +11,8 @@
     "seed": "knex seed:run",
     "test-utils": "mocha spec/utils.spec.js",
     "test": "mocha spec/app.spec.js",
-    "dev": "nodemon listen.js"
+    "dev": "nodemon listen.js",
+    "check": "psql -f ./db/check.sql"
   },
   "repository": {
     "type": "git",

@@ -2,52 +2,26 @@ const { connection } = require("../db/connection");
 
 exports.selectArticleById = article_id => {
   return connection
-    .select(
-      "title",
-      "article_id",
-      "body",
-      "topic",
-      "created_at",
-      "votes",
-      "author"
-    )
+    .select("articles.*")
     .from("articles")
-    .where("article_id", "=", article_id)
+    .where("articles.article_id", "=", article_id)
+    .leftJoin("comments", "articles.article_id", "comments.article_id")
+    .count("comments.comment_id as comment_count")
+    .groupBy("articles.article_id")
     .then(articleArray => {
-      console.log(articleArray, "<---article array");
-      // return articleArray;
+      const formattedObjArr = articleArray.map(articleObj => {
+        const newObj = { ...articleObj };
+
+        const stringCommentCount = Number(articleObj.comment_count);
+
+        newObj.comment_count = stringCommentCount;
+        // console.log(newObj, "<--newObj");
+        return newObj;
+      });
+      console.log(formattedObjArr[0], "formattedObj");
+      return formattedObjArr[0];
+    })
+    .catch(err => {
+      console.log(err);
     });
 };
-
-exports.countCommentsByArticleId = article_id => {
-  return connection
-    .select("*")
-    .from("comments")
-    .where("article_id", "=", article_id)
-    .then(commentsArray => {
-      console.log(commentsArray, "commentsArray");
-    });
-};
-
-// comment_count = total number of comments with this article_id. Use knex queries to achieve this
-// select * from comments where article_id = articles.article_id.length
-// maybe use a promise all?
-
-// exports.selectArticleById = article_id => {
-//  return connection
-//   .select(
-//    "title",
-//    "article_id",
-//    "body",
-//    "topic",
-//    "created_at",
-//    "votes",
-//    "author"
-//   )
-//   .from("articles")
-//   .where("article_id", "=", article_id)
-//   .then(articleArray => {
-//    console.log(articleArray, "<---article array");
-//    return articleArray;
-//   });
-// };

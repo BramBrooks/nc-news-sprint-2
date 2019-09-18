@@ -1,4 +1,7 @@
-const { selectArticleById } = require("../models/articles-model.js");
+const {
+  selectArticleById
+  // ,updateArticleById
+} = require("../models/articles-model.js");
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -10,3 +13,13 @@ exports.getArticleById = (req, res, next) => {
     })
     .catch(next);
 };
+
+// exports.patchArticleById = (req, res, next) => {
+//   const { article_id } = req.params;
+//   updateArticleById(article_id)
+//     .then(updatedArticle => {
+//       console.log(updatedArticle, "<-- updatedArticle from controller");
+//       res.status(200).send({ article });
+//     })
+//     .catch(next);
+// };

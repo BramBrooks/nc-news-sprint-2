@@ -73,17 +73,25 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "<-- body");
-            expect(body).to.contain.all.keys(
+            console.log(body, "<-- body in test");
+            expect(body.article).to.include.keys(
               "author",
               "title",
               "article_id",
               "body",
               "topic",
               "created_at",
-              "votes",
-              "comment_count"
+              "votes"
             );
+          });
+      });
+      it("status 200: includes comment count key", () => {
+        return request
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body, "<-- body in test");
+            expect(body.article).to.include.keys("created_at");
           });
       });
     });

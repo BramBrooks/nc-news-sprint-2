@@ -1,0 +1,10 @@
+
+> be-nc-news@1.0.0 check /Users/BramwellBrooks/Northcoders/3-Back-End/Sprints-2/be-nc-news
+> psql -f ./db/check.sql
+
+You are now connected to database "nc_news" as user "BramwellBrooks".
+ article_id |       title        | count 
+------------+--------------------+-------
+          1 | Running a Node App |     8
+(1 row)
+
