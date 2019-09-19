@@ -226,11 +226,64 @@ describe("/api", () => {
             );
           });
       });
+      it("status 200: Articles array order is sorted by 'date' as default", () => {
+        return request
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body).to.be.descendingBy("created_at");
+          });
+      });
+      it("status 200: Accepts queries for articles array order to be sorted by any valid column and either ascending or descending", () => {
+        return request
+          .get("/api/articles/?sort_by=title&order_by=asc")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body).to.be.ascendingBy("title");
+          });
+      });
+      it("status 200: Accepts queries for author which filters the articles by username value specified in the query", () => {
+        return request
+          .get("/api/articles/?author=icellusedkars")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0].author).to.equal("icellusedkars");
+          });
+      });
+      it("status 200: Accepts queries for topic which filters the articles by topic value specified in the query", () => {
+        return request
+          .get("/api/articles/?topic=mitch")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0].topic).to.equal("mitch");
+          });
+      });
+    });
+  });
+  describe("/comments", () => {
+    describe("PATCH", () => {
+      it.only("status 200: responds with a correctly updated comment when passed a valid comment_id", () => {
+        return request
+          .patch("/api/comments/1")
+          .send({ inc_votes: 3000 })
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body, "body");
+            // check this is correct too!!!!
+
+            expect(body.updatedComment.votes).to.equal(3016);
+          });
+      });
+    });
+    xit("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
+      return request
+        .patch("/api/comments/1")
+        .send({ inc_votes: "dog" })
+        .expect(400)
+        .then(({ body }) => {
+          // FINISH THIS FIRST!!!!
+          expect(body.msg).to.equal("Bad Request");
+        });
     });
   });
 });
-
-// TWO ERRORS ON SORT BY / ORDER
-// ONE ERROR ON POST
-// THEN! GET /api/articles
-// Do some method not allowed responses

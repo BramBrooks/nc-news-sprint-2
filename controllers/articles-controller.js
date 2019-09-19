@@ -59,8 +59,9 @@ exports.getCommentsByArticleId = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  // console.log("in getArticles controller!");
-  selectAllArticles()
+  const { sort_by, order_by, author, topic } = req.query;
+
+  selectAllArticles(sort_by, order_by, author, topic)
     .then(selectedArticles => {
       res.status(200).send(selectedArticles);
     })

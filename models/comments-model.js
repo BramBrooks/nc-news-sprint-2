@@ -18,8 +18,6 @@ exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
   const order = order_by || "desc";
   const columnList = ["comment_id", "votes", "created_at", "author", "body"];
 
-  // console.log(column, "<-----column");
-
   return (
     connection("comments")
       .select("comment_id", "votes", "created_at", "author", "body")
@@ -42,28 +40,15 @@ exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
   );
 };
 
-// exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
-//   const column = sort_by || "created_at";
-//   const order = order_by || "desc";
-
-//   const columnList = ["comment_id", "votes", "created_at", "author", "body"];
-//   if (!columnList.includes(column)) {
-//     console.log("yes");
-
-//     // Promise.reject({
-//     //   status: 400,
-//     //   msg: "Bad Request - Invalid Column For Sorting"
-//     // });
-//   } else {
-//     return connection("comments")
-//       .select("comment_id", "votes", "created_at", "author", "body")
-
-//       .where("article_id", "=", article_id)
-//       .orderBy(column, order)
-//       .then(commentsArray => {
-//         console.log(commentsArray, "<------- commentsArray");
-//         console.log(column, "<-------column");
-//         return commentsArray;
-//       });
-//   }
-// };
+exports.updateCommentByCommentId = (comment_id, inc_votes) => {
+  return connection
+    .select("*")
+    .from("comments")
+    .where("comment_id", "=", comment_id)
+    .increment({ votes: inc_votes })
+    .returning("*")
+    .then(commentArray => {
+      console.log(commentArray);
+      return commentArray[0];
+    });
+};

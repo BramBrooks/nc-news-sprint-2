@@ -44,7 +44,20 @@ exports.updateArticleById = (article_id, inc_votes) => {
     });
 };
 
-exports.selectAllArticles = () => {
+exports.selectAllArticles = (sort_by, order_by, author, topic) => {
+  const column = sort_by || "created_at";
+  const order = order_by || "desc";
+
+  const columnList = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count"
+  ];
+
   return connection
     .select(
       "articles.author",
@@ -53,19 +66,31 @@ exports.selectAllArticles = () => {
       "topic",
       "articles.created_at",
       "articles.votes"
-      // "comment_count"
-      // "*"
     )
     .from("articles")
     .leftJoin("comments", "articles.article_id", "comments.article_id")
     .count("comments.comment_id as comment_count")
     .groupBy("articles.article_id")
     .returning("*")
-    .then(articleArray => {
-      // console.log(articleArray, "<------ articleArray");
-      return articleArray;
-    })
-    .catch(err => {
-      console.log(err, "<------ error");
+    .orderBy(column, order)
+    .then(articlesArray => {
+      if (!columnList.includes(column)) {
+        Promise.reject({
+          status: 400,
+          msg: "Bad Request - Invalid Column For Sorting"
+        });
+      } else {
+        if (author) {
+          return articlesArray.filter(article => (article.author = author));
+        } else {
+          if (topic) {
+            return articlesArray.filter(article => (article.topic = topic));
+          }
+        }
+        return articlesArray;
+      }
     });
+  // .catch(err => {
+  //   console.log(err, "<------ error");
+  // });
 };
