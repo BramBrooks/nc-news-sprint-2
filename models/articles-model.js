@@ -11,7 +11,6 @@ exports.selectArticleById = article_id => {
     .count("comments.comment_id as comment_count")
     .groupBy("articles.article_id")
     .then(articleArray => {
-      // console.log(articleArray);
       if (articleArray.length === 0) {
         return Promise.reject({ status: 404, msg: "Article not found" });
       } else {
@@ -21,11 +20,10 @@ exports.selectArticleById = article_id => {
           const stringCommentCount = Number(articleObj.comment_count);
 
           newObj.comment_count = stringCommentCount;
-          // console.log(newObj, "<--newObj");
+
           return newObj;
         });
 
-        // console.log(formattedObjArr[0], "<----- formattedObj");
         return formattedObjArr[0];
       }
     });
@@ -43,5 +41,31 @@ exports.updateArticleById = (article_id, inc_votes) => {
     .then(articleArray => {
       // console.log(articleArray[0], "<-----articleArray");
       return articleArray[0];
+    });
+};
+
+exports.selectAllArticles = () => {
+  return connection
+    .select(
+      "articles.author",
+      "title",
+      "articles.article_id",
+      "topic",
+      "articles.created_at",
+      "articles.votes"
+      // "comment_count"
+      // "*"
+    )
+    .from("articles")
+    .leftJoin("comments", "articles.article_id", "comments.article_id")
+    .count("comments.comment_id as comment_count")
+    .groupBy("articles.article_id")
+    .returning("*")
+    .then(articleArray => {
+      // console.log(articleArray, "<------ articleArray");
+      return articleArray;
+    })
+    .catch(err => {
+      console.log(err, "<------ error");
     });
 };

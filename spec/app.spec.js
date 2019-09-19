@@ -1,10 +1,17 @@
 process.env.NODE_ENV = "test";
 
+process.env.NODE_ENV = "test";
+
 const app = require("../app");
 
 const request = require("supertest")(app);
 
-const { expect } = require("chai");
+const chai = require("chai");
+
+const chaiSorted = require("chai-sorted");
+const { expect } = chai;
+
+chai.use(chaiSorted);
 
 const { connection } = require("../db/connection");
 
@@ -71,7 +78,6 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "<-- body in test");
             expect(body.article).to.include.keys(
               "author",
               "title",
@@ -88,7 +94,6 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "<----- body in test");
             expect(body.article).to.include.keys("created_at");
             expect(body.article.comment_count).to.be.a("number");
             // why is created_at in a string format when it gets back to the test response?
@@ -99,7 +104,6 @@ describe("/api", () => {
           .get("/api/articles/9999999")
           .expect(404)
           .then(({ body }) => {
-            // console.log(body.msg, "<----- body in test");
             expect(body.msg).to.equal("Article not found");
           });
       });
@@ -108,7 +112,6 @@ describe("/api", () => {
           .get("/api/articles/abcde")
           .expect(400)
           .then(({ body }) => {
-            // console.log(body.msg, "<----- body in test");
             expect(body.msg).to.equal("Bad Request");
           });
       });
@@ -120,7 +123,6 @@ describe("/api", () => {
           .send({ inc_votes: 4000 })
           .expect(200)
           .then(({ body }) => {
-            // console.log(body);
             expect(body.updatedArticle.votes).to.equal(4100);
           });
       });
@@ -131,21 +133,104 @@ describe("/api", () => {
         .send({ inc_votes: "dog" })
         .expect(400)
         .then(({ body }) => {
-          // console.log(body);
           expect(body.msg).to.equal("Bad Request");
         });
     });
+  });
+
+  describe("/comments", () => {
     describe("POST", () => {
-      it.only("status 200: responds with confirmation of the posted comment", () => {
+      it("status 200: responds with confirmation of the posted comment", () => {
         return request
           .post("/api/articles/1/comments")
-          .send({ username: "bram12345", body: "This is a comment!" })
+          .send({ username: "butter_bridge", body: "This is a comment!" })
           .expect(200)
           .then(({ body }) => {
-            // console.log(body);
-            expect(body).to.equal("This is a comment!");
+            // console.log(body, "body in test");
+            expect(body.insertedComment).to.equal("This is a comment!");
+          });
+      });
+      it("status 400: responds with bad request when passed comment with no content", () => {
+        return request
+          .post("/api/articles/1/comments")
+          .send({ username: "butter_bridge", body: "" })
+          .expect(400)
+          .then(({ body }) => {
+            // console.log(body, "body in test");
+            expect(body.msg).to.equal("No comment provided!");
+          });
+      });
+    });
+    describe("GET", () => {
+      it("status 200: responds with an array of comments for the given article_id", () => {
+        return request
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body[0], "body in test");
+            expect(body[0]).to.have.all.keys(
+              "comment_id",
+              "votes",
+              "created_at",
+              "author",
+              "body"
+            );
+          });
+      });
+      it("status 200: commment array is sorted by 'created at' & ordered by descending by default", () => {
+        return request
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body }) => {
+            // console.log(body, "body in test");
+            expect(body[0].comment_id).to.equal(2);
+            expect(body[12].comment_id).to.equal(18);
+          });
+      });
+      it("status 200: commment array takes sort queries and order is sorted by 'created at' & ordered by queries", () => {
+        return request
+          .get("/api/articles/1/comments?sort_by=votes&order_by=asc")
+          .expect(200)
+          .then(({ body }) => {
+            // add test specific to ascendingBy
+            expect(body[0].comment_id).to.equal(4);
+            expect(body[12].comment_id).to.equal(3);
+          });
+      });
+      it("status 400: responds with 400 Bad Request when passed a sort_by argument where column does not exist", () => {
+        return request
+          .get("/api/articles/1/comments?sort_by=dave")
+          .expect(400)
+          .then(({ body }) => {
+            // add extra bit of code to the code for this - if (sortBy) etc
+            expect(body.msg).to.equal("Bad Request");
+          });
+      });
+    });
+  });
+  describe("/articles", () => {
+    describe("GET", () => {
+      it("status 200: Returns array of article objects with specific keys including comment_count ", () => {
+        return request
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0]).to.have.all.keys(
+              "author",
+              "title",
+              "article_id",
+              "topic",
+              "created_at",
+              "votes",
+              "comment_count"
+            );
           });
       });
     });
   });
 });
+
+// TWO ERRORS ON SORT BY / ORDER
+// ONE ERROR ON POST
+// THEN! GET /api/articles
+// Do some method not allowed responses
