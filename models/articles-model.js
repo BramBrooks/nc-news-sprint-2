@@ -1,8 +1,6 @@
 const { connection } = require("../db/connection");
 
 exports.selectArticleById = article_id => {
-  // console.log(article_id, "<---- article_id");
-
   return connection
     .select("articles.*")
     .from("articles")
@@ -27,9 +25,6 @@ exports.selectArticleById = article_id => {
         return formattedObjArr[0];
       }
     });
-  // .catch(err => {
-  //   console.log(err, "<------ error");
-  // });
 };
 
 exports.updateArticleById = (article_id, inc_votes) => {
@@ -39,8 +34,14 @@ exports.updateArticleById = (article_id, inc_votes) => {
     .increment({ votes: inc_votes })
     .returning("*")
     .then(articleArray => {
-      // console.log(articleArray[0], "<-----articleArray");
-      return articleArray[0];
+      if (articleArray.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Not Found - Article id does not exist"
+        });
+      } else {
+        return articleArray[0];
+      }
     });
 };
 
@@ -90,7 +91,4 @@ exports.selectAllArticles = (sort_by, order_by, author, topic) => {
         return articlesArray;
       }
     });
-  // .catch(err => {
-  //   console.log(err, "<------ error");
-  // });
 };

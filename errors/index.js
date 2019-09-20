@@ -4,11 +4,21 @@ exports.handleCustomErrors = (err, req, res, next) => {
   else next(err);
 };
 
-exports.handlePsqlErrors = (err, req, res, next) => {
+exports.handle400PsqlErrors = (err, req, res, next) => {
   // console.log(err.code);
   const codes = ["22P02", "42703"];
   if (codes.includes(err.code)) {
     res.status(400).send({ msg: "Bad Request" });
+  } else {
+    next(err);
+  }
+};
+
+exports.handle404PsqlErrors = (err, req, res, next) => {
+  // console.log(err.code);
+  const codes = ["22003"];
+  if (codes.includes(err.code)) {
+    res.status(404).send({ msg: "Page not found" });
   } else {
     next(err);
   }

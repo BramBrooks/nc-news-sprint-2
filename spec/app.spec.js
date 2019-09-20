@@ -96,7 +96,6 @@ describe("/api", () => {
           .then(({ body }) => {
             expect(body.article).to.include.keys("created_at");
             expect(body.article.comment_count).to.be.a("number");
-            // why is created_at in a string format when it gets back to the test response?
           });
       });
       it("status 404: responds with article not found when passed an articleId which does not exist", () => {
@@ -126,15 +125,24 @@ describe("/api", () => {
             expect(body.updatedArticle.votes).to.equal(4100);
           });
       });
-    });
-    it("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
-      return request
-        .patch("/api/articles/1")
-        .send({ inc_votes: "dog" })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).to.equal("Bad Request");
-        });
+      it("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
+        return request
+          .patch("/api/articles/1")
+          .send({ inc_votes: "dog" })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad Request");
+          });
+      });
+      it("status 404: responds with not found when passed a non existent article_id", () => {
+        return request
+          .patch("/api/articles/999999999")
+          .send({ inc_votes: 50 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Not Found - Article id does not exist");
+          });
+      });
     });
   });
 
@@ -146,8 +154,7 @@ describe("/api", () => {
           .send({ username: "butter_bridge", body: "This is a comment!" })
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "body in test");
-            expect(body.insertedComment).to.equal("This is a comment!");
+            expect(body.insertedComment.body).to.equal("This is a comment!");
           });
       });
       it("status 400: responds with bad request when passed comment with no content", () => {
@@ -156,8 +163,16 @@ describe("/api", () => {
           .send({ username: "butter_bridge", body: "" })
           .expect(400)
           .then(({ body }) => {
-            // console.log(body, "body in test");
             expect(body.msg).to.equal("No comment provided!");
+          });
+      });
+      it("status 404: responds with page not found when passed an article id that does not exist", () => {
+        return request
+          .post("/api/articles/99999999999/comments")
+          .send({ username: "butter_bridge", body: "hello there" })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Page not found");
           });
       });
     });
@@ -167,7 +182,6 @@ describe("/api", () => {
           .get("/api/articles/1/comments")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body[0], "body in test");
             expect(body[0]).to.have.all.keys(
               "comment_id",
               "votes",
@@ -182,17 +196,17 @@ describe("/api", () => {
           .get("/api/articles/1/comments")
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "body in test");
+            expect(body).to.be.descendingBy("created_at");
             expect(body[0].comment_id).to.equal(2);
             expect(body[12].comment_id).to.equal(18);
           });
       });
-      it("status 200: commment array takes sort queries and order is sorted by 'created at' & ordered by queries", () => {
+      it("status 200: commment array takes sort queries and sort order 'votes' ascendingly", () => {
         return request
           .get("/api/articles/1/comments?sort_by=votes&order_by=asc")
           .expect(200)
           .then(({ body }) => {
-            // add test specific to ascendingBy
+            expect(body).to.be.ascendingBy("votes");
             expect(body[0].comment_id).to.equal(4);
             expect(body[12].comment_id).to.equal(3);
           });
@@ -202,15 +216,22 @@ describe("/api", () => {
           .get("/api/articles/1/comments?sort_by=dave")
           .expect(400)
           .then(({ body }) => {
-            // add extra bit of code to the code for this - if (sortBy) etc
             expect(body.msg).to.equal("Bad Request");
+          });
+      });
+      it("status 404: responds with 404 not found when passed an article_id that does not exist", () => {
+        return request
+          .get("/api/articles/99999999999/comments")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Page not found");
           });
       });
     });
   });
   describe("/articles", () => {
     describe("GET", () => {
-      it("status 200: Returns array of article objects with specific keys including comment_count ", () => {
+      it("status 200: Returns array of all article objects with specific keys including comment_count ", () => {
         return request
           .get("/api/articles")
           .expect(200)
@@ -262,28 +283,38 @@ describe("/api", () => {
   });
   describe("/comments", () => {
     describe("PATCH", () => {
-      it.only("status 200: responds with a correctly updated comment when passed a valid comment_id", () => {
+      it("status 200: responds with a correctly updated comment when passed a valid comment_id", () => {
         return request
           .patch("/api/comments/1")
           .send({ inc_votes: 3000 })
           .expect(200)
           .then(({ body }) => {
-            // console.log(body, "body");
-            // check this is correct too!!!!
-
             expect(body.updatedComment.votes).to.equal(3016);
           });
       });
+      it("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
+        return request
+          .patch("/api/comments/1")
+          .send({ inc_votes: "dog" })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad Request");
+          });
+      });
+      it("status 404: responds with comment not found when passed a valid comment number that does not exist", () => {
+        return request
+          .patch("/api/comments/99999999")
+          .send({ inc_votes: 3000 })
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Comment Does Not Exist");
+          });
+      });
     });
-    xit("status 400: responds with bad request when passed an invalid inc_votes i.e. not a number", () => {
-      return request
-        .patch("/api/comments/1")
-        .send({ inc_votes: "dog" })
-        .expect(400)
-        .then(({ body }) => {
-          // FINISH THIS FIRST!!!!
-          expect(body.msg).to.equal("Bad Request");
-        });
+    describe("DELETE", () => {
+      it("status 204: deletes given comment by comment_id and returns status 204 and no content", () => {
+        return request.delete("/api/comments/1").expect(204);
+      });
     });
   });
 });

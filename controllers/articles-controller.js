@@ -46,10 +46,6 @@ exports.postCommentByArticleId = (req, res, next) => {
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { sort_by, order_by } = req.query;
-  // console.log(sort_by, "<-----sort_by");
-  // console.log(order_by, "<-----order_by");
-
-  // console.log(article_id);
 
   selectCommentsByArticleId(article_id, sort_by, order_by)
     .then(selectedComments => {
