@@ -1,13 +1,16 @@
 const {
   selectArticleById,
   updateArticleById,
-  selectAllArticles
+  selectAllArticles,
+  checkArticleExists
 } = require("../models/articles-model.js");
 
 const {
   insertCommentByArticleId,
   selectCommentsByArticleId
 } = require("../models/comments-model");
+
+const { topicChecker, authorChecker } = require("../models/topics-model");
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -25,8 +28,8 @@ exports.patchArticleById = (req, res, next) => {
   const { inc_votes } = req.body;
 
   updateArticleById(article_id, inc_votes)
-    .then(updatedArticle => {
-      res.status(200).send({ updatedArticle });
+    .then(article => {
+      res.status(200).send({ article });
     })
     .catch(next);
 };
@@ -36,9 +39,12 @@ exports.postCommentByArticleId = (req, res, next) => {
   const { body } = req.body;
   const { username } = req.body;
 
-  insertCommentByArticleId(article_id, body, username)
-    .then(insertedComment => {
-      res.status(200).send({ insertedComment });
+  checkArticleExists(article_id).catch(next);
+  //here
+
+  return insertCommentByArticleId(article_id, body, username)
+    .then(comment => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };
@@ -47,9 +53,11 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { sort_by, order_by } = req.query;
 
-  selectCommentsByArticleId(article_id, sort_by, order_by)
-    .then(selectedComments => {
-      res.status(200).send(selectedComments);
+  checkArticleExists(article_id).catch(next);
+
+  return selectCommentsByArticleId(article_id, sort_by, order_by)
+    .then(comments => {
+      res.status(200).send({ comments });
     })
     .catch(next);
 };
@@ -57,9 +65,19 @@ exports.getCommentsByArticleId = (req, res, next) => {
 exports.getAllArticles = (req, res, next) => {
   const { sort_by, order_by, author, topic } = req.query;
 
-  selectAllArticles(sort_by, order_by, author, topic)
-    .then(selectedArticles => {
-      res.status(200).send(selectedArticles);
+  if (topic) {
+    topicChecker(topic).catch(next);
+  }
+
+  if (author) {
+    authorChecker(author).catch(next);
+  }
+
+  // Future improvement - work out how to combine the two above into one!!!
+
+  return selectAllArticles(sort_by, order_by, author, topic)
+    .then(articles => {
+      res.status(200).send({ articles });
     })
     .catch(next);
 };

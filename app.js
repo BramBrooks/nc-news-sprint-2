@@ -3,7 +3,8 @@ const express = require("express");
 const {
   handleCustomErrors,
   handle400PsqlErrors,
-  handle404PsqlErrors
+  handle404PsqlErrors,
+  handleServerErrors
 } = require("./errors/index");
 
 const apiRouter = require("./routes/api-router");
@@ -19,5 +20,7 @@ app.use(handleCustomErrors);
 app.use(handle400PsqlErrors);
 
 app.use(handle404PsqlErrors);
+
+app.use(handleServerErrors);
 
 module.exports = app;

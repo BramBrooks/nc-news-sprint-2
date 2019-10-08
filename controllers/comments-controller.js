@@ -8,8 +8,8 @@ exports.patchCommentByCommentId = (req, res, next) => {
   const { inc_votes } = req.body;
 
   updateCommentByCommentId(commentId, inc_votes)
-    .then(updatedComment => {
-      res.status(200).send({ updatedComment });
+    .then(comment => {
+      res.status(200).send({ comment });
     })
     .catch(next);
 };

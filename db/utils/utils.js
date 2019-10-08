@@ -26,6 +26,8 @@ exports.makeRefObj = list => {
 };
 
 exports.formatComments = (comments, articleRef) => {
+  // console.log(comments, "<---- comments 1");
+
   const formattedComments = comments.map(commentObj => {
     const copyObj = { ...commentObj };
 
@@ -47,5 +49,6 @@ exports.formatComments = (comments, articleRef) => {
     return copyObj;
   });
 
+  // console.log(comments, "<---- comments 2");
   return formattedComments;
 };

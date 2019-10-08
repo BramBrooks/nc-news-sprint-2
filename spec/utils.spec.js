@@ -90,7 +90,7 @@ describe("formatComments", () => {
     const actual = formatComments(input);
     const expected = [];
     expect(actual).to.eql(expected);
-    expect(actual).to.not.equal(expected);
+    // expect(actual).to.not.equal(expected);
   });
   it("Takes an array containing single comment object and a reference object and returns correct output ", () => {
     const commentObjArr = [
@@ -118,7 +118,7 @@ describe("formatComments", () => {
       }
     ];
     expect(actual).to.eql(expected);
-    expect(actual).to.not.equal(expected);
+    // expect(actual).to.not.equal(expected);
   });
   it("Takes an array containing multiple comment objects and a reference object and returns correct output ", () => {
     const commentObjArr = [
@@ -161,6 +161,6 @@ describe("formatComments", () => {
       }
     ];
     expect(actual).to.eql(expected);
-    expect(actual).to.not.equal(expected);
+    // expect(actual).to.not.equal(expected);
   });
 });

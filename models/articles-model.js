@@ -27,7 +27,7 @@ exports.selectArticleById = article_id => {
     });
 };
 
-exports.updateArticleById = (article_id, inc_votes) => {
+exports.updateArticleById = (article_id, inc_votes = 0) => {
   return connection
     .from("articles")
     .where("article_id", "=", article_id)
@@ -89,6 +89,18 @@ exports.selectAllArticles = (sort_by, order_by, author, topic) => {
           }
         }
         return articlesArray;
+      }
+    });
+};
+
+exports.checkArticleExists = article_id => {
+  return connection
+    .select("articles.*")
+    .from("articles")
+    .where("articles.article_id", "=", article_id)
+    .then(articleArray => {
+      if (!articleArray.length) {
+        return Promise.reject({ status: 404, msg: "Article Does Not Exist" });
       }
     });
 };

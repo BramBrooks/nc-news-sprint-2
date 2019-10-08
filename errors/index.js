@@ -16,7 +16,7 @@ exports.handle400PsqlErrors = (err, req, res, next) => {
 
 exports.handle404PsqlErrors = (err, req, res, next) => {
   // console.log(err.code);
-  const codes = ["22003"];
+  const codes = ["22003", "22P02", "42703"];
   if (codes.includes(err.code)) {
     res.status(404).send({ msg: "Page not found" });
   } else {

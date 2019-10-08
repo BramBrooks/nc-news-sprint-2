@@ -20,4 +20,8 @@ articlesRouter
   .post(postCommentByArticleId)
   .get(getCommentsByArticleId);
 
+// articlesRouter.all("/*", (req, res, next) =>
+//   next({ status: 405, msg: "Method Not Allowed" })
+// );
+
 module.exports = articlesRouter;
