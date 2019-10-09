@@ -36,9 +36,7 @@ exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
   }
 };
 
-// is it possible to promise reject if comment i-d doesn't exist? Probably not...
-
-exports.updateCommentByCommentId = (comment_id, inc_votes) => {
+exports.updateCommentByCommentId = (comment_id, inc_votes = 0) => {
   return connection
     .select("comments.*")
     .from("comments")
@@ -54,7 +52,17 @@ exports.updateCommentByCommentId = (comment_id, inc_votes) => {
     });
 };
 
-// looks like I need to write the error test for this - there's no validation of comment_id being existent...
+exports.checkCommentExists = comment_id => {
+  return connection
+    .select("comments.*")
+    .from("comments")
+    .where("comments.comment_id", "=", comment_id)
+    .then(commentArray => {
+      if (!commentArray.length) {
+        return Promise.reject({ status: 404, msg: "Comment Does Not Exist" });
+      }
+    });
+};
 
 exports.removeCommentByCommentId = comment_id => {
   return connection

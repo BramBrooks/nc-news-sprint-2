@@ -10,8 +10,8 @@ commentsRouter
   .patch(patchCommentByCommentId)
   .delete(deleteCommentByCommentId);
 
-// commentsRouter.all("/*", (req, res, next) =>
-//   next({ status: 405, msg: "Method Not Allowed" })
-// );
+commentsRouter.all("/*", (req, res, next) =>
+  next({ status: 405, msg: "Method Not Allowed" })
+);
 
 module.exports = commentsRouter;

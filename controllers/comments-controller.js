@@ -1,6 +1,7 @@
 const {
   updateCommentByCommentId,
-  removeCommentByCommentId
+  removeCommentByCommentId,
+  checkCommentExists
 } = require("../models/comments-model");
 
 exports.patchCommentByCommentId = (req, res, next) => {
@@ -16,8 +17,9 @@ exports.patchCommentByCommentId = (req, res, next) => {
 
 exports.deleteCommentByCommentId = (req, res, next) => {
   const { commentId } = req.params;
+  checkCommentExists(commentId).catch(next);
 
-  removeCommentByCommentId(commentId)
+  return removeCommentByCommentId(commentId)
     .then(commentsArray => {
       res.sendStatus(204);
     })

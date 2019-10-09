@@ -8,9 +8,11 @@ const articlesRouter = require("./articles-router");
 
 const commentsRouter = require("./comments-router");
 
-// const api_JSON_Router = require("./json-");
+const endPointJSON = require("../endpoints.json");
 
-// apiRouter.use("", api_JSON_Router);
+apiRouter.get("/", (req, res) => {
+  res.send(endPointJSON);
+});
 
 apiRouter.use("/topics", topicsRouter);
 
