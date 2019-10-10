@@ -24,6 +24,6 @@ exports.handle404PsqlErrors = (err, req, res, next) => {
   }
 };
 
-exports.handleServerErrors = (req, res) => {
+exports.handleServerErrors = (err, req, res, next) => {
   res.status(500).send({ msg: "Internal Server Error!" });
 };
