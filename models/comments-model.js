@@ -1,4 +1,4 @@
-const { connection } = require("../db/connection");
+const connection = require("../db/connection");
 
 exports.insertCommentByArticleId = (article_id, body, username) => {
   if (!body || !username) {

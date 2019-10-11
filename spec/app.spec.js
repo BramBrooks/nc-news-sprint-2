@@ -11,7 +11,7 @@ const { expect } = chai;
 
 chai.use(chaiSorted);
 
-const { connection } = require("../db/connection");
+const connection = require("../db/connection");
 
 describe("/api", () => {
   beforeEach(() => {
@@ -326,7 +326,7 @@ describe("/api", () => {
           });
       });
     });
-    describe("DELETE", () => {
+    describe.only("DELETE", () => {
       it("status 204: deletes given comment by comment_id and returns status 204 and no content", () => {
         return request.delete("/api/comments/1").expect(204);
       });
