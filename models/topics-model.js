@@ -18,11 +18,10 @@ exports.topicChecker = topic => {
 };
 
 exports.authorChecker = author => {
-  // console.log(author, "<--- author");
   return connection
-    .select("articles.*")
-    .from("articles")
-    .where("articles.author", "=", author)
+    .select("users.*")
+    .from("users")
+    .where("users.username", "=", author)
     .then(authorArray => {
       if (!authorArray.length) {
         return Promise.reject({ status: 404, msg: "Author not found" });

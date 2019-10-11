@@ -22,7 +22,7 @@ apiRouter.use("/articles", articlesRouter);
 
 apiRouter.use("/comments", commentsRouter);
 
-apiRouter.use("/*", (req, res, next) =>
+apiRouter.all("/*", (req, res, next) =>
   next({ status: 405, msg: "Method Not Allowed" })
 );
 

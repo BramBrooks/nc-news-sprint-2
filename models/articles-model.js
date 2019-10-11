@@ -15,7 +15,7 @@ exports.selectArticleById = article_id => {
         const formattedObjArr = articleArray.map(articleObj => {
           const newObj = { ...articleObj };
 
-          const stringCommentCount = Number(articleObj.comment_count);
+          const stringCommentCount = articleObj.comment_count;
 
           newObj.comment_count = stringCommentCount;
 
@@ -45,9 +45,9 @@ exports.updateArticleById = (article_id, inc_votes = 0) => {
     });
 };
 
-exports.selectAllArticles = (sort_by, order_by, author, topic) => {
+exports.selectAllArticles = (sort_by, order, author, topic) => {
   const column = sort_by || "created_at";
-  const order = order_by || "desc";
+  const order_by = order || "desc";
 
   const columnList = [
     "author",
@@ -73,7 +73,7 @@ exports.selectAllArticles = (sort_by, order_by, author, topic) => {
     .count("comments.comment_id as comment_count")
     .groupBy("articles.article_id")
     .returning("*")
-    .orderBy(column, order)
+    .orderBy(column, order_by)
     .then(articlesArray => {
       if (!columnList.includes(column)) {
         Promise.reject({
@@ -82,12 +82,13 @@ exports.selectAllArticles = (sort_by, order_by, author, topic) => {
         });
       } else {
         if (author) {
-          return articlesArray.filter(article => (article.author = author));
+          return articlesArray.filter(article => article.author === author);
         } else {
           if (topic) {
-            return articlesArray.filter(article => (article.topic = topic));
+            return articlesArray.filter(article => article.topic === topic);
           }
         }
+
         return articlesArray;
       }
     });

@@ -74,7 +74,7 @@ describe("/api", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.article).to.include.keys("created_at");
-            expect(body.article.comment_count).to.be.a("number");
+            expect(body.article.comment_count).to.be.a("string");
           });
       });
       it("status 404: responds with article not found when passed an articleId which does not exist", () => {
@@ -211,6 +211,7 @@ describe("/api", () => {
           });
       });
 
+      /// here ******************************
       it("status 200: commment array is sorted by 'created at' & ordered by descending by default", () => {
         return request
           .get("/api/articles/1/comments")
@@ -221,9 +222,19 @@ describe("/api", () => {
             expect(body.comments[12].comment_id).to.equal(18);
           });
       });
+      it("status 200: returns commment array sorted by asc when passed this as query", () => {
+        return request
+          .get("/api/articles/1/comments?order=asc")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).to.be.ascendingBy("created_at");
+            expect(body.comments[0].comment_id).to.equal(18);
+            expect(body.comments[12].comment_id).to.equal(2);
+          });
+      });
       it("status 200: commment array takes sort queries and sort order 'votes' ascendingly", () => {
         return request
-          .get("/api/articles/1/comments?sort_by=votes&order_by=asc")
+          .get("/api/articles/1/comments?sort_by=votes&order=asc")
           .expect(200)
           .then(({ body }) => {
             expect(body.comments).to.be.ascendingBy("votes");
@@ -356,12 +367,20 @@ describe("/api", () => {
             expect(body.articles).to.be.descendingBy("created_at");
           });
       });
-      it("status 200: Accepts queries for articles array order to be sorted by any valid column and either ascending or descending", () => {
+      it("status 200: Articles array order is returned with default sort by 'created_at'  and default order as 'desc'", () => {
         return request
-          .get("/api/articles/?sort_by=title&order_by=asc")
+          .get("/api/articles")
           .expect(200)
           .then(({ body }) => {
-            expect(body.articles).to.be.ascendingBy("title");
+            expect(body.articles).to.be.descendingBy("created_at");
+          });
+      });
+      it("status 200: Articles array order is returned with order as ascending when queried (and will default to ascending by date created by default if not passed an argument", () => {
+        return request
+          .get("/api/articles/?order=asc")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.ascendingBy("created_at");
           });
       });
       it("status 200: Accepts queries for author which filters the articles by username value specified in the query", () => {
@@ -370,6 +389,14 @@ describe("/api", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.articles[0].author).to.equal("icellusedkars");
+          });
+      });
+      it("status 200: Returns status 200 and empty array when request received for article by topic, where topic exists but has no articles", () => {
+        return request
+          .get("/api/articles/?topic=paper")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.eql([]);
           });
       });
       it("status 200: Accepts queries for topic which filters the articles by topic value specified in the query", () => {
@@ -395,6 +422,14 @@ describe("/api", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).to.equal("Author not found");
+          });
+      });
+      it("status 200: where author on query does exist, but has not created any articles", () => {
+        return request
+          .get("/api/articles/?author=lurker")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.eql([]);
           });
       });
     });
@@ -644,6 +679,14 @@ describe("/api", () => {
           .expect(405)
           .then(({ body }) => {
             expect(body.msg).to.equal("Method Not Allowed");
+          });
+      });
+      it("status 404: returns 'Non existent route' when passed an invalid route", () => {
+        return request
+          .get("/non-existent-route")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Route does not exist");
           });
       });
     });

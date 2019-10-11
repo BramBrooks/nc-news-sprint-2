@@ -13,9 +13,9 @@ exports.insertCommentByArticleId = (article_id, body, username) => {
   }
 };
 
-exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
+exports.selectCommentsByArticleId = (article_id, sort_by, order) => {
   const column = sort_by || "created_at";
-  const order = order_by || "desc";
+  const order_by = order || "desc";
   const columnList = ["comment_id", "votes", "created_at", "author", "body"];
 
   if (!columnList.includes(column)) {
@@ -28,7 +28,7 @@ exports.selectCommentsByArticleId = (article_id, sort_by, order_by) => {
       .select("comment_id", "votes", "created_at", "author", "body")
 
       .where("article_id", "=", article_id)
-      .orderBy(column, order)
+      .orderBy(column, order_by)
 
       .then(commentsArray => {
         return commentsArray;

@@ -51,11 +51,11 @@ exports.postCommentByArticleId = (req, res, next) => {
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  const { sort_by, order_by } = req.query;
+  const { sort_by, order } = req.query;
 
   checkArticleExists(article_id).catch(next);
 
-  return selectCommentsByArticleId(article_id, sort_by, order_by)
+  return selectCommentsByArticleId(article_id, sort_by, order)
     .then(comments => {
       res.status(200).send({ comments });
     })
@@ -63,7 +63,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { sort_by, order_by, author, topic } = req.query;
+  const { sort_by, order, author, topic } = req.query;
 
   if (topic) {
     topicChecker(topic).catch(next);
@@ -75,7 +75,7 @@ exports.getAllArticles = (req, res, next) => {
 
   // Future improvement - work out how to combine the two above into one!!!
 
-  return selectAllArticles(sort_by, order_by, author, topic)
+  return selectAllArticles(sort_by, order, author, topic)
     .then(articles => {
       res.status(200).send({ articles });
     })
