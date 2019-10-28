@@ -326,7 +326,7 @@ describe("/api", () => {
           });
       });
     });
-    describe.only("DELETE", () => {
+    describe("DELETE", () => {
       it("status 204: deletes given comment by comment_id and returns status 204 and no content", () => {
         return request.delete("/api/comments/1").expect(204);
       });
