@@ -40,7 +40,6 @@ exports.postCommentByArticleId = (req, res, next) => {
   const { username } = req.body;
 
   checkArticleExists(article_id).catch(next);
-  //here
 
   return insertCommentByArticleId(article_id, body, username)
     .then(comment => {
@@ -72,8 +71,6 @@ exports.getAllArticles = (req, res, next) => {
   if (author) {
     authorChecker(author).catch(next);
   }
-
-  // Future improvement - work out how to combine the two above into one!!!
 
   return selectAllArticles(sort_by, order, author, topic)
     .then(articles => {
