@@ -10,7 +10,9 @@ Clone this repo: https://github.com/BramBrooks/nc-news-sprint-2
 
 This application was built and run using Node.js v12.12.0.
 
-To run this API you will need to install the following dev dependencies...
+You can install Node from https://nodejs.org/en/
+
+To run this API you will also need to install the following dev dependencies.
 
 - chai
 - mocha
