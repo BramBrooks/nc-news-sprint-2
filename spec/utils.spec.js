@@ -162,3 +162,4 @@ describe("formatComments", () => {
     expect(actual).to.eql(expected);
   });
 });
+
