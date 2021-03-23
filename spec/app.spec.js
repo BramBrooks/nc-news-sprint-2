@@ -32,8 +32,8 @@ describe("/api", () => {
                 username: "butter_bridge",
                 name: "jonny",
                 avatar_url:
-                  "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-              }
+                  "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+              },
             });
           });
       });
@@ -118,7 +118,7 @@ describe("/api", () => {
               votes: 100,
               topic: "mitch",
               author: "butter_bridge",
-              created_at: "2018-11-15T12:21:54.171Z"
+              created_at: "2018-11-15T12:21:54.171Z",
             });
           });
       });
@@ -320,7 +320,7 @@ describe("/api", () => {
               votes: 16,
               created_at: "2017-11-22T12:36:03.389Z",
               body:
-                "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+                "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
             });
           });
       });
@@ -444,14 +444,14 @@ describe("/api", () => {
             expect(body).to.eql({
               "GET /api": {
                 description:
-                  "serves up a json representation of all the available endpoints of the api"
+                  "serves up a json representation of all the available endpoints of the api",
               },
               "GET /api/topics": {
                 description: "serves an array of all topics",
                 queries: [],
                 exampleResponse: {
-                  topics: [{ slug: "football", description: "Footie!" }]
-                }
+                  topics: [{ slug: "football", description: "Footie!" }],
+                },
               },
               "GET /api/articles": {
                 description: "serves an array of all articles",
@@ -463,10 +463,10 @@ describe("/api", () => {
                       topic: "cooking",
                       author: "weegembump",
                       body: "Text from the article..",
-                      created_at: "2018-11-15T12:21:54.171Z"
-                    }
-                  ]
-                }
+                      created_at: "2018-11-15T12:21:54.171Z",
+                    },
+                  ],
+                },
               },
               "GET /api/articles/:article_id": {
                 description:
@@ -482,10 +482,10 @@ describe("/api", () => {
                       topic: "mitch",
                       author: "butter_bridge",
                       created_at: "2018-11-15T12:21:54.171Z",
-                      comment_count: 13
-                    }
-                  ]
-                }
+                      comment_count: 13,
+                    },
+                  ],
+                },
               },
               "GET /api/articles/:article_id/comments": {
                 description:
@@ -500,10 +500,10 @@ describe("/api", () => {
                       created_at: "2018-11-15T12:21:54.171Z",
                       author: "butter_bridge",
                       body:
-                        "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
-                    }
-                  ]
-                }
+                        "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+                    },
+                  ],
+                },
               },
               "GET /api/users/:username": {
                 description:
@@ -515,10 +515,10 @@ describe("/api", () => {
                       username: "butter_bridge",
                       name: "jonny",
                       avatar_url:
-                        "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-                    }
-                  ]
-                }
+                        "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+                    },
+                  ],
+                },
               },
               "PATCH /api/articles/:article_id": {
                 description:
@@ -533,10 +533,10 @@ describe("/api", () => {
                       votes: 100,
                       topic: "mitch",
                       author: "butter_bridge",
-                      created_at: "2018-11-15T12:21:54.171Z"
-                    }
-                  ]
-                }
+                      created_at: "2018-11-15T12:21:54.171Z",
+                    },
+                  ],
+                },
               },
               "POST /api/articles/:article_id/comments": {
                 description:
@@ -549,9 +549,9 @@ describe("/api", () => {
                     article_id: 1,
                     votes: 0,
                     created_at: "2018-11-15T12:21:54.171Z",
-                    body: "This is a comment!"
-                  }
-                }
+                    body: "This is a comment!",
+                  },
+                },
               },
               "PATCH /api/comments/:comment_id": {
                 description:
@@ -566,16 +566,16 @@ describe("/api", () => {
                       votes: 16,
                       created_at: "2017-11-22T12:36:03.389Z",
                       body:
-                        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
-                    }
-                  }
-                ]
+                        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                    },
+                  },
+                ],
               },
               "DELETE /api/comments/:comment_id": {
                 description: "deletes an existing comment - no response",
                 queries: [],
-                exampleResponse: "no response"
-              }
+                exampleResponse: "no response",
+              },
             });
             ``;
           });
