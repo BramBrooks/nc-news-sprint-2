@@ -1,8 +1,7 @@
 const ENV = process.env.NODE_ENV || "development";
-
 const knex = require("knex");
 
-// this is sligtly different
+// Updated version
 const dbConfig =
   ENV === "production"
     ? {
@@ -15,6 +14,8 @@ const dbConfig =
         },
       }
     : require("../knexfile");
+
+// original code
 
 // const dbConfig =
 //   ENV === "production"

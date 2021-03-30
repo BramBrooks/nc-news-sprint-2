@@ -13,6 +13,15 @@ const baseConfig = {
 };
 
 const customConfig = {
+  production: {
+    connection: {
+      connectionString: DB_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+  },
+
   development: {
     connection: {
       database: "nc_news",
@@ -28,14 +37,7 @@ const customConfig = {
     },
   },
 
-  production: {
-    connection: {
-      connectionString: DB_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    },
-  },
+  // original code for production:
   // production: {
   //   connection: `${DB_URL}?ssl=true`,
   // },
