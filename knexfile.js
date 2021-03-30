@@ -27,13 +27,21 @@ const customConfig = {
       // password
     },
   },
+
   production: {
-    connection: `${DB_URL}?ssl=true`,
+    connection: {
+      connectionString: DB_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
   },
+  // production: {
+  //   connection: `${DB_URL}?ssl=true`,
+  // },
 };
 
 export default { ...customConfig[ENV], ...baseConfig };
 
 // module.exports = { ...customConfig[ENV], ...baseConfig };
-
 /// ...baseConfig    client:"pg" migrations:{direc}
