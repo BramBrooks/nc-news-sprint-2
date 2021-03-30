@@ -2,10 +2,24 @@ const ENV = process.env.NODE_ENV || "development";
 
 const knex = require("knex");
 
+// this is sligtly different
 const dbConfig =
   ENV === "production"
-    ? { client: "pg", connection: process.env.DATABASE_URL }
+    ? {
+        client: "pg",
+        connection: {
+          connectionString: process.env.DATABASE_URL,
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
+      }
     : require("../knexfile");
+
+// const dbConfig =
+//   ENV === "production"
+//     ? { client: "pg", connection: process.env.DATABASE_URL }
+//     : require("../knexfile").default;
 
 const connection = knex(dbConfig);
 
