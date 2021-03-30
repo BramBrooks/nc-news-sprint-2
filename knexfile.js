@@ -43,7 +43,7 @@ const customConfig = {
   // },
 };
 
-export default { ...customConfig[ENV], ...baseConfig };
+// export default { ...customConfig[ENV], ...baseConfig };
 
-// module.exports = { ...customConfig[ENV], ...baseConfig };
+module.exports = { ...customConfig[ENV], ...baseConfig };
 /// ...baseConfig    client:"pg" migrations:{direc}
