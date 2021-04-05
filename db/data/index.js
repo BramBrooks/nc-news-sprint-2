@@ -6,4 +6,8 @@ const devData = require("./development-data/index");
 
 const data = { development: devData, test: testData, production: devData };
 
-module.exports = data[ENV];
+const doesItWork = data[ENV];
+
+// this is just a change from module.exports = data[ENV]
+
+module.exports = doesItWork;

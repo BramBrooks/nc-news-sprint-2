@@ -12,6 +12,7 @@ const baseConfig = {
   },
 };
 
+// should this be customConfigs
 const customConfig = {
   production: {
     connection: {
@@ -43,7 +44,6 @@ const customConfig = {
   // },
 };
 
-// export default { ...customConfig[ENV], ...baseConfig };
+const tryThisAgain = { ...customConfig[ENV], ...baseConfig };
 
-module.exports = { ...customConfig[ENV], ...baseConfig };
-/// ...baseConfig    client:"pg" migrations:{direc}
+module.exports = tryThisAgain;
