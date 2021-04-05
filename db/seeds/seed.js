@@ -2,12 +2,12 @@ const {
   topicData,
   articleData,
   commentData,
-  userData
+  userData,
 } = require("../data/index");
 
 const { formatDates, formatComments, makeRefObj } = require("../utils/utils");
 
-exports.seed = function(knex) {
+exports.seed = function (knex) {
   return knex.migrate
     .rollback()
     .then(() => knex.migrate.latest())
@@ -21,9 +21,7 @@ exports.seed = function(knex) {
       // console.log("Inserted topics and users okay...");
 
       const formattedArticles = formatDates(articleData);
-      return knex("articles")
-        .insert(formattedArticles)
-        .returning("*");
+      return knex("articles").insert(formattedArticles).returning("*");
 
       /* 
       
@@ -34,7 +32,7 @@ exports.seed = function(knex) {
       Your comment insertions will depend on information from the seeded articles, so make sure to return the data after it's been seeded.
       */
     })
-    .then(articleRows => {
+    .then((articleRows) => {
       // console.log("Inserted articles OK...");
 
       /* 

@@ -15,15 +15,14 @@ const dbConfig =
       }
     : require("../knexfile");
 
-// original code
-
+// original code :
 // const dbConfig =
 //   ENV === "production"
 //     ? { client: "pg", connection: process.env.DATABASE_URL }
 //     : require("../knexfile").default;
 
-const connection = knex(dbConfig);
+// attempted change:
+// const connection = knex(dbConfig);
+// module.exports = connection;
 
-module.exports = connection;
-
-// module.exports = knex(dbConfig);
+module.exports = knex(dbConfig);

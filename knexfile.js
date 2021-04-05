@@ -12,7 +12,7 @@ const baseConfig = {
   },
 };
 
-// should this be customConfigs
+// updated code
 const customConfig = {
   production: {
     connection: {
@@ -44,6 +44,4 @@ const customConfig = {
   // },
 };
 
-const tryThisAgain = { ...customConfig[ENV], ...baseConfig };
-
-module.exports = tryThisAgain;
+module.exports = { ...customConfig[ENV], ...baseConfig };
